@@ -146,6 +146,156 @@ node<T>* MidPointInLL3(node<T>*head) {
 	return slow;
 }
 
+template<typename T>
+void ReverseLL(node<T>*&head) {
+
+	node<T>*current = head;
+	node<T>*prev = NULL;
+	node<T>*agla;
+
+	while (current != NULL) {
+		agla = current->next;
+		current->next = prev;
+		prev = current;
+		current = agla;
+	}
+	head = prev;
+	//return prev;
+}
+
+template<typename T>
+node<T>* ReverseLL1(node<T>*&head) {
+
+	node<T>*current = head;
+	node<T>*prev = NULL;
+	node<T>*agla;
+
+	while (current != NULL) {
+		agla = current->next;
+		current->next = prev;
+		prev = current;
+		current = agla;
+	}
+
+	head = prev;
+	return prev;
+}
+
+
+
+template<typename T>
+node<T>* ReverseLL2(node<T>*&head) {
+
+	//Base Condition
+	if (head == NULL or head->next == NULL) {
+		return head;
+	}
+
+	//Recursion
+	node<T>*new_head = ReverseLL2(head->next);
+
+	//Work
+	node<T>*current = head;
+	current->next->next = current;
+	current->next = NULL;
+
+	//Return the Reversed Linked List Head.
+	return new_head;
+}
+
+template<typename T>
+void CycleCreation(node<T>*head, int k) {
+
+	//Create a Cyle from end to k from start.
+	node<T>*temp = head;
+
+	//I want to reach the kth node.
+	while (k > 1) {
+		head = head->next;
+		k = k - 1;
+	}
+
+	//cout << head->data << " ";
+
+	//I want to reach at the tail/last node.
+	while (temp->next != NULL) {
+		temp = temp->next;
+	}
+
+	//cout << temp->data << " ";
+	temp->next = head;
+}
+
+
+template<typename T>
+bool IsCycle(node<T>*head) {
+
+	node<T>*slow = head;
+	node<T>*fast = head;
+
+	while (fast != NULL and fast->next != NULL) {
+
+		slow = slow->next;
+		fast = fast->next->next;
+
+		if (slow == fast) {
+			return true;
+		}
+	}
+	return false;
+}
+
+template<typename T>
+void BreakCycle(node<T>*head) {
+
+	if (IsCycle(head) == 0) {
+		return;
+	}
+
+	node<T>*slow = head;
+	node<T>*fast = head;
+
+	while (fast != NULL and fast->next != NULL) {
+
+		slow = slow->next;
+		fast = fast->next->next;
+
+		if (slow == fast) {
+			break;
+		}
+	}
+
+	//I  have two pointers slow and fast at the
+	//same meeting point.
+
+	node<T>*prev = head;//I want this node before
+	//Meeting Point.
+
+	while (prev->next != fast) {
+		prev = prev->next;
+	}
+
+	//Now My Prev is before the meeting point.
+
+	slow = head;
+
+	while (slow != fast) {
+		slow = slow->next;
+		fast = fast->next;
+		prev = prev->next;
+	}
+
+
+	//Slow and Fast are the origin of the cycle
+	//and my prev is at the last node.
+
+	prev->next = NULL;
+	return;
+}
+
+
+
+
 
 
 
