@@ -233,15 +233,123 @@ Pair1 Diameter3(node<int>*root) {
 
 }
 
+class Pair2 {
+public:
+	int height;
+	bool hb;
+
+	Pair2() {
+		height = 0;
+		hb = 0;
+	}
+};
+
+Pair2 IsHeightBalanced(node<int>*root) {
+
+	Pair2 p;
+
+	if (root == NULL) {
+		p.hb = 1;
+		p.height = 0;
+		return p;
+	}
+
+	Pair2 LST = IsHeightBalanced(root->left);
+	Pair2 RST = IsHeightBalanced(root->right);
+
+
+	if (LST.hb == 1 and RST.hb == 1 and
+	        abs(LST.height - RST.height) <= 1) {
+		p.hb = 1;
+	} else {
+		p.hb = 0;
+	}
+
+	p.height = max(LST.height, RST.height) + 1;
+
+	return p;
+}
 
 
 
+node<int>*CreateHeightBalancedTree(int *b, int s, int e) {
+
+	if (s > e) {
+		return NULL;
+	}
+
+	int mid = (s + e) / 2;
+
+	node<int>*r = new node(b[mid]);
+
+	r->left = CreateHeightBalancedTree(b, s, mid - 1);
+	r->right = CreateHeightBalancedTree(b, mid + 1, e);
+
+	return r;
+}
+
+
+//n-->Computation
+void PrintKthLevel(node<int>*root, int k) {
+
+	if (root == NULL) {
+		return;
+	}
+
+	if (k == 1) {
+		cout << root->data << " ";
+		return;
+	}
+
+
+	PrintKthLevel(root->left, k - 1);
+	PrintKthLevel(root->right, k - 1);
+}
 
 
 
+//n*h: Computation.
+void PrintALLLevel(node<int>*root) {
 
+	int h = Height(root);
 
+	for (int i = 1; i <= h; i = i + 1) {
+		PrintKthLevel(root, i);
+		cout << endl;
+	}
 
+}
+
+// int i = 0;
+
+node<int>*CreatefromPreandIn(int *pre, int* in, int s, int e) {
+
+	if (s > e) {
+		return NULL;
+	}
+
+	static int i = 0;
+
+	//Works
+	node<int>*r = new node(pre[i]);
+
+	int index = -1;//Inorder array me pre[i] konse index par hain.
+
+	for (int j = s; j <= e; j = j + 1) {
+		if (in[j] == pre[i]) {
+			index = j;
+			break;
+		}
+	}
+
+	i = i + 1;
+
+	r->left = CreatefromPreandIn(pre, in, s, index - 1);
+	r->right = CreatefromPreandIn(pre, in, index + 1, e);
+
+	return r;
+
+}
 
 
 
